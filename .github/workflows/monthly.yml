@@ -35,13 +35,24 @@ jobs:
           python main.py
 
       - name: Commit data updates
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          # wymagane czasem na runnerach (git safety)
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
           git config user.name "uniqa-report-bot"
           git config user.email "uniqa-report-bot@users.noreply.github.com"
+
+          # ustaw remote na token (żeby push zawsze miał autoryzację)
+          git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+
           git add data/*.csv output/report.txt || true
+
           if git diff --staged --quiet; then
             echo "No changes to commit."
-          else
-            git commit -m "Update UNIQA data $(date -u +'%Y-%m-%d')"
-            git push
+            exit 0
           fi
+
+          git commit -m "Update UNIQA data $(date -u +'%Y-%m-%d')"
+          git push origin HEAD:${GITHUB_REF_NAME}
