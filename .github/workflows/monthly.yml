@@ -34,25 +34,37 @@ jobs:
         run: |
           python main.py
 
+      - name: Debug git + files
+        run: |
+          set -x
+          pwd
+          ls -ლა
+          ls -la data || true
+          ls -la output || true
+          git status || true
+          git branch -vv || true
+          git remote -v || true
+
+
       - name: Commit data updates
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # wymagane czasem na runnerach (git safety)
+          set -x
           git config --global --add safe.directory "$GITHUB_WORKSPACE"
-
           git config user.name "uniqa-report-bot"
           git config user.email "uniqa-report-bot@users.noreply.github.com"
 
-          # ustaw remote na token (żeby push zawsze miał autoryzację)
-          git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-
           git add data/*.csv output/report.txt || true
+          git status || true
 
           if git diff --staged --quiet; then
             echo "No changes to commit."
             exit 0
           fi
 
-          git commit -m "Update UNIQA data $(date -u +'%Y-%m-%d')"
-          git push origin HEAD:${GITHUB_REF_NAME}
+          git commit -m "Update UNIQA data $(date -u +'%Y-%m-%d')" || { echo "COMMIT FAILED"; git status; exit 1; }
+
+          # użyj tokena do push (wypisze jednoznacznie 403/protected itd.)
+          git push "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD:${GITHUB_REF_NAME} \
+            || { echo "PUSH FAILED"; git remote -v; git status; exit 1; }
