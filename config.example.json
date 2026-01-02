@@ -1,0 +1,10 @@
+{
+  "funds": [
+    {
+      "name": "UNIQA Akcji",
+      "url": "https://www.uniqa.pl/informacje-tfi/wycena-tfi/uniqa-akcji-43/?currency=PLN"
+    }
+  ],
+  "periods": [1, 3, 6, 12],
+  "currency": "PLN"
+}
