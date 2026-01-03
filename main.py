@@ -58,7 +58,7 @@ def http_get(url: str, session: requests.Session, retries: int = 3, backoff: flo
 def find_download_links(html: str, base_url: str) -> dict[int, str]:
     """
     Szuka linków 'Pobierz' dla okresów i mapuje:
-    1 -> url, 3 -> url, 6 -> url, 12 -> url
+    1 -> url, 3 -> url, 6 -> url, 12 -> url, 24 -> url
 
     Na stronie UNIQA linki mają parametry typu:
     fundId=..&fundType=tfi&period=1&type=700002&currency=PLN
@@ -74,7 +74,7 @@ def find_download_links(html: str, base_url: str) -> dict[int, str]:
             if not m:
                 continue
             p = int(m.group(1))
-            if p in (1, 3, 6, 12):
+            if p in (1, 3, 6, 12, 24):
                 # href bywa względny
                 if href.startswith("/"):
                     out[p] = "https://www.uniqa.pl" + href
@@ -191,8 +191,8 @@ def normalize_snapshot_from_dfs(fund_name: str, dfs_by_period: dict[int, pd.Data
     nav = None
     as_of = None
 
-    # preferuj 1M do NAV, a jak go nie ma to 3M,6M,12M
-    nav_preference = [1, 3, 6, 12]
+    # preferuj 1M do NAV, a jak go nie ma to 3M,6M,12M, 24M
+    nav_preference = [1, 3, 6, 12, 24]
 
     for p, df in dfs_by_period.items():
         # zredukuj puste kolumny
@@ -271,7 +271,7 @@ def write_report(report_path: str, snaps: list[FundSnapshot], periods: list[int]
 def main():
     ensure_dirs()
     cfg = load_config()
-    periods = cfg.get("periods", [1, 3, 6, 12])
+    periods = cfg.get("periods", [1, 3, 6, 12, 24])
 
     session = requests.Session()
 
