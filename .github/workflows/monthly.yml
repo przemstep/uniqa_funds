@@ -34,11 +34,11 @@ jobs:
         run: |
           python main.py
 
-      - name: Debug git + files
+      - name: Debug files and git
         run: |
           set -x
           pwd
-          ls -ლა
+          ls -la
           ls -la data || true
           ls -la output || true
           git status || true
