@@ -44,29 +44,3 @@ jobs:
           git status || true
           git branch -vv || true
           git remote -v || true
-
-
-      - name: Commit data updates
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          set -x
-          git config --global --add safe.directory "$GITHUB_WORKSPACE"
-          git config user.name "uniqa-report-bot"
-          git config user.email "uniqa-report-bot@users.noreply.github.com"
-
-          git add data/*.csv output/report.txt || true
-          git status || true
-
-          if git diff --staged --quiet; then
-            echo "No changes to commit."
-            exit 0
-          fi
-
-          git commit -m "Update UNIQA data $(date -u +'%Y-%m-%d')"
-
-          # ustaw remote na token i włącz bardzo szczegółowe logi
-          git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-
-          GIT_TRACE=1 GIT_CURL_VERBOSE=1 git push origin HEAD:${GITHUB_REF_NAME}
-
