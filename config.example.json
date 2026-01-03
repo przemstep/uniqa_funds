@@ -2,9 +2,43 @@
   "funds": [
     {
       "name": "UNIQA Akcji",
-      "url": "https://www.uniqa.pl/informacje-tfi/wycena-tfi/uniqa-akcji-43/?currency=PLN"
+      "url": "https://www.uniqa.pl/informacje-tfi/wycena-tfi/uniqa-akcji-2/"
+    },
+    {
+      "name": "UNIQA Akcji Amerykańskich",
+      "url": "https://www.uniqa.pl/informacje-tfi/wycena-tfi/uniqa-akcji-amerykanskich-48/"
+    },
+    {
+      "name": "UNIQA Akcji Europejskich ESG",
+      "url": "https://www.uniqa.pl/informacje-tfi/wycena-tfi/uniqa-akcji-europejskich-esg-49/"
+    },
+    {
+      "name": "UNIQA Akcji Małych i Średnich Spółek",
+      "url": "https://www.uniqa.pl/informacje-tfi/wycena-tfi/uniqa-akcji-malych-i-srednich-spolek-10/"
+    },
+    {
+      "name": "UNIQA Akcji Rynku Złota",
+      "url": "https://www.uniqa.pl/informacje-tfi/wycena-tfi/uniqa-akcji-rynku-zlota-113/"
+    },
+    {
+      "name": "UNIQA Akcji Rynków Wschodzących (d. Akcji Spółek Dywidendowych)",
+      "url": "https://www.uniqa.pl/informacje-tfi/wycena-tfi/uniqa-akcji-rynkow-wschodzacych-d-akcji-spolek-dywidendowych-9/"
+    },
+    {
+      "name": "UNIQA Globalny Akcji",
+      "url": "https://www.uniqa.pl/informacje-tfi/wycena-tfi/uniqa-globalny-akcji-52/"
+    },
+    {
+      "name": "UNIQA Globalny Akcji Walutowy",
+      "url": "https://www.uniqa.pl/informacje-tfi/wycena-tfi/uniqa-globalny-akcji-walutowy-120/"
+    },
+    {
+      "name": "UNIQA Selective Equity",
+      "url": "https://www.uniqa.pl/informacje-tfi/wycena-tfi/uniqa-selective-equity-7/"
+    },
+    {
+      "name": "UNIQA Selektywny Akcji Polskich (d. Akcji Dużych Spółek)",
+      "url": "https://www.uniqa.pl/informacje-tfi/wycena-tfi/uniqa-selektywny-akcji-polskich-d-akcji-duzych-spolek-1/"
     }
-  ],
-  "periods": [1, 3, 6, 12, 24],
-  "currency": "PLN"
+  ]
 }
