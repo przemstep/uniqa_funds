@@ -417,4 +417,21 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except Exception as e:
+        import traceback
+        ensure_dirs()
+        tb = traceback.format_exc()
+
+        # zapisz do pliku, żeby było dostępne w Pages
+        with open(os.path.join(OUTPUT_DIR, "error.txt"), "w", encoding="utf-8") as f:
+            f.write(tb)
+
+        # wypisz też do logów (jeśli UI je pokaże)
+        print(tb)
+
+        # WAŻNE: na czas diagnostyki NIE przerywamy builda,
+        # żeby Pages się opublikowały i dało się otworzyć error.txt
+        # Po naprawie wrócimy do normalnego "raise".
+        raise SystemExit(0)
