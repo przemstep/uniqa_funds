@@ -6,7 +6,9 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
+  pages: write
+  id-token: write
 
 jobs:
   run:
@@ -44,3 +46,19 @@ jobs:
           git status || true
           git branch -vv || true
           git remote -v || true
+
+      - name: Prepare Pages content
+        run: |
+          mkdir -p pages/data
+          mkdir -p pages/output
+          cp -r data/* pages/data/ || true
+          cp -r output/* pages/output/ || true
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: pages
+
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
+
