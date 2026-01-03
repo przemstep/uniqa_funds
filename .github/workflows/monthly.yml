@@ -1,4 +1,4 @@
-name: UNIQA monthly report
+name: UNIQA monthly report (Pages)
 
 on:
   schedule:
@@ -10,17 +10,18 @@ permissions:
   pages: write
   id-token: write
 
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
 jobs:
-  run:
+  build:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          persist-credentials: true
-          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -34,31 +35,61 @@ jobs:
 
       - name: Run pipeline
         run: |
-          python main.py
+          python -u main.py
 
-      - name: Debug files and git
+      # Diagnostyka: zawsze pokaże, czy pliki faktycznie powstały
+      - name: Debug outputs
         run: |
           set -x
           pwd
           ls -la
           ls -la data || true
           ls -la output || true
-          git status || true
-          git branch -vv || true
-          git remote -v || true
 
       - name: Prepare Pages content
         run: |
+          set -x
+          rm -rf pages
           mkdir -p pages/data
           mkdir -p pages/output
-          cp -r data/* pages/data/ || true
-          cp -r output/* pages/output/ || true
+
+          # Kopiuj tylko jeśli katalog istnieje (unika błędów globów)
+          if [ -d "data" ]; then
+            cp -r data/* pages/data/ || true
+          fi
+          if [ -d "output" ]; then
+            cp -r output/* pages/output/ || true
+          fi
+
+          # Strona startowa (opcjonalnie, ale pomaga)
+          cat > pages/index.html << 'EOF'
+          <html><body>
+          <h2>UNIQA report artifacts</h2>
+          <ul>
+            <li><a href="./data/latest.csv">data/latest.csv</a></li>
+            <li><a href="./data/history.csv">data/history.csv</a></li>
+            <li><a href="./output/report.txt">output/report.txt</a></li>
+          </ul>
+          </body></html>
+          EOF
+
+          echo "Pages directory tree:"
+          find pages -maxdepth 3 -type f -print
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: pages
 
-      - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v4
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    timeout-minutes: 10
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
 
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
